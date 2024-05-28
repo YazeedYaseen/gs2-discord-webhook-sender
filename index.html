@@ -39,8 +39,13 @@ function sendWebhookMessage(webhookURL, username, content) {
     if (request.status === 204) {
       statusElement.innerText = "Message sent successfully!";
     } else {
-      statusElement.innerText = "Failed to send message. HTTP Status Code: " + request.status;
+      statusElement.innerText = "Failed to send message. HTTP Status Code: " + request.status + ". Response: " + request.responseText;
     }
+  };
+
+  request.onerror = function() {
+    var statusElement = document.getElementById("status");
+    statusElement.innerText = "Network error occurred.";
   };
 }
 
