@@ -9,59 +9,54 @@
 <p id="status"></p>
 
 <script>
-function getQueryParams() {
-  var params = {};
-  var queryString = window.location.search.substring(1);
-  var regex = /([^&=]+)=([^&]*)/g;
-  var m;
+  function getQueryParams() {
+    var params = {};
+    var queryString = window.location.search.substring(1);
+    var regex = /([^&=]+)=([^&]*)/g;
+    var m;
 
-  while (m = regex.exec(queryString)) {
-    params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-  }
-
-  return params;
-}
-
-function sendWebhookMessage(webhookURL, username, content) {
-  var request = new XMLHttpRequest();
-  request.open("POST", webhookURL);
-  request.setRequestHeader("Content-Type", "application/json");
-
-  var payload = {
-    username: username,
-    content: content
-  };
-
-  request.send(JSON.stringify(payload));
-
-  request.onload = function() {
-    var statusElement = document.getElementById("status");
-    if (request.status === 204) {
-      statusElement.innerText = "Message sent successfully!";
-    } else {
-      statusElement.innerText = "Failed to send message. HTTP Status Code: " + request.status + ". Response: " + request.responseText;
+    while (m = regex.exec(queryString)) {
+      params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
     }
-  };
 
-  request.onerror = function() {
-    var statusElement = document.getElementById("status");
-    statusElement.innerText = "Network error occurred.";
-  };
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-  var params = getQueryParams();
-  var username = params["username"];
-  var content = params["content"];
-  var webhookURL = "https://discord.com/api/webhooks/1244958003174703114/qAIZnB6kz_njEZDCnyXNX6VgUQywQruBAPSEKlVT0z4EvNaKqqQPHcjl7GETz8YG5hDl"; // Replace with your actual Discord webhook URL
-
-  if (!username || !content) {
-    document.getElementById("status").innerText = "Error: 'username' or 'content' query string not defined.";
-    return;
+    return params;
   }
 
-  sendWebhookMessage(webhookURL, username, content);
-});
+  function sendWebhookMessage(webhookURL, username, content) {
+    var request = new XMLHttpRequest();
+    request.open("POST", webhookURL);
+    request.setRequestHeader("Content-Type", "application/json");
+
+    var payload = {
+      username: username,
+      content: content
+    };
+
+    request.send(JSON.stringify(payload));
+
+    request.onload = function() {
+      var statusElement = document.getElementById("status");
+      if (request.status === 204) {
+        statusElement.innerText = "Message sent successfully!";
+      } else {
+        statusElement.innerText = "Failed to send message. HTTP Status Code: " + request.status;
+      }
+    };
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var params = getQueryParams();
+    var username = params["username"];
+    var content = params["content"];
+    var webhookURL = "https://discord.com/api/webhooks/1244958003174703114/qAIZnB6kz_njEZDCnyXNX6VgUQywQruBAPSEKlVT0z4EvNaKqqQPHcjl7GETz8YG5hDl"; // Replace with your actual Discord webhook URL
+
+    if (!username || !content) {
+      document.getElementById("status").innerText = "Error: 'username' or 'content' query string not defined.";
+      return;
+    }
+
+    sendWebhookMessage(webhookURL, username, content);
+  });
 </script>
 
 </body>
